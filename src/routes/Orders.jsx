@@ -12,6 +12,7 @@ export const Orders = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             const orders = await getOrders(auth.id);
+            orders.sort((a,b) => b.createdAt.toMillis() - a.createdAt.toMillis());
             setOrders(orders);
             setLoading(false);
         }
