@@ -4,8 +4,6 @@ import { OrderItemProduct } from "./OrderItemProduct";
 export const OrderItem = ({order}) => {
     const {orderId, createdAt, orderItems} = order;
 
-    console.log(orderItems)
-
     return (
         <div className='order-item'>
             <p>{orderId}</p>

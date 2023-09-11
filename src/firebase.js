@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCVDApeYyy-TAJr8zwf2dWm4gb4hd1NuDc",
@@ -56,11 +56,36 @@ export const getCategories = async () => {
 
 export const resetPassword = async (email) => await sendPasswordResetEmail(auth, email);
 
-export const addOrder = async (userId, orderItems) => await addDoc(collection(db, 'orders'), {
-	userId,
-	createdAt: new Date(),
-	orderItems
-})
+export const addOrder = async (userId, orderItems) => {
+	const categories = await getCategories();
+
+	await addDoc(collection(db, 'orders'), {
+		userId,
+		createdAt: new Date(),
+		orderItems
+	})
+
+	await Promise.all(orderItems.map(async orderItem => {
+		const categRef = doc(db, 'categories', orderItem.categoryId);
+		const newCategoryItems = categories.map(category => {
+			if(category.id === orderItem.categoryId){
+				const newItems = category.items.map(categoryItem => {
+					if(categoryItem.id === orderItem.id){
+						categoryItem.stock = categoryItem.stock - orderItem.count;
+					}
+					return categoryItem;
+				})
+
+				category.items = newItems;
+			}
+			return category;
+		}).find(value => value.id === orderItem.categoryId).items
+		
+		await updateDoc(categRef, {
+			items: newCategoryItems
+		});
+	}))
+}
 
 export const getOrders = async (uid) => {
 	const querySnapshot = await getDocs(collection(db, "orders"));

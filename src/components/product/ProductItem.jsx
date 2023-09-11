@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { cartActions } from "../../store/cartReducer";
 
-export const ProductItem = ({id, imageUrl, name, price, stock}) => {
+export const ProductItem = ({id, categoryId, imageUrl, name, price, stock}) => {
 	const dispatch = useDispatch();
 	const isProductAvailable = stock > 0;
 
@@ -11,7 +11,7 @@ export const ProductItem = ({id, imageUrl, name, price, stock}) => {
 				{isProductAvailable ?
 					<button 
 						className="product-button" 
-						onClick={() => dispatch(cartActions.handleAddCart({id, name, price, imageUrl}))}
+						onClick={() => dispatch(cartActions.handleAddCart({id, name, price, imageUrl, categoryId}))}
 					>
 						ADD TO CART
 					</button>

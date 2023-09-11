@@ -7,6 +7,7 @@ import { completeCheckout } from '../utils/utils';
 import { ThankYou } from '../components/checkout/ThankYou';
 import { addOrder } from '../firebase';
 import { cartActions } from '../store/cartReducer';
+import { fetchProductsAsync } from "../store/productsReducer";
 
 export const Checkout = () => {
     const {auth, authPending} = useSelector((state) => state.auth);
@@ -14,15 +15,14 @@ export const Checkout = () => {
     const dispatch = useDispatch();
     const [checkoutLoading, setCheckoutLoading] = useState(false);
     const [checkoutCompleted, setCheckoutCompleted] = useState(false);
-
     const total = cart.reduce((acc, curr) => acc + (curr.count * curr.price), 0);
 
     const handleCompleteCheckout = async () => {
         setCheckoutLoading(true);
         try{
-            await completeCheckout();
             await addOrder(auth.id, cart);
-            
+            await completeCheckout();
+            dispatch(fetchProductsAsync());
             dispatch(cartActions.setCart([]))
             setCheckoutLoading(false);
             setCheckoutCompleted(true);

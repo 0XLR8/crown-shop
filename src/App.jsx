@@ -14,10 +14,9 @@ import { authObserver, getUser } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./store/authReducer"
 import { cartActions } from "./store/cartReducer"
-import { fetchProductsAsync } from "./store/productsReducer"
+import { fetchProductsAsync } from "./store/productsReducer";
 
 export const App = () => {
-
 	const {cart} = useSelector(state => state.cart);
 	const dispatch = useDispatch();
 

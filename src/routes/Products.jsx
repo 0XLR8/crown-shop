@@ -17,7 +17,8 @@ export const Products = () => {
                 {
                     items.map(product => 
                         <ProductItem 
-                            key={product.id} 
+                            key={product.id}
+                            categoryId={id} 
                             id={product.id}
                             name={product.name} 
                             price={product.price} 

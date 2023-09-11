@@ -9,7 +9,6 @@ const initialState = {
 export const fetchProductsAsync = createAsyncThunk('products/fetchProducts', async (payload, thunkApi) => {
     try{
         const res = await getCategories();
-        console.log(res)
         return res;
     } catch (er) {
         console.log(er.message);
